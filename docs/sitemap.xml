@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.travel-hub.biz/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/it/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/usa-canada/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/usa-canada/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/usa-canada/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/it/usa-canada/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/usa-canada/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/usa-canada/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/global-reach/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/global-reach/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/global-reach/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/it/global-reach/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/global-reach/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/global-reach/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/contact/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/contatti/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/it/contatti/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/contact/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/contatti/"/>
+  </url>
+</urlset>

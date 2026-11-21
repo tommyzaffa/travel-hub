@@ -1,0 +1,11 @@
+{
+  "name": "travel-hub-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Travel Hub — bilingual (EN/IT) showcase website. Static, generated into /docs.",
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "serve": "python3 -m http.server 4317 --directory docs"
+  }
+}
