@@ -1,5 +1,5 @@
 import { P, COMPANY } from '../data.mjs';
-import { img, imgUrl, lines, ICON, clock, telHref, heroMedia } from '../lib.mjs';
+import { img, imgUrl, lines, ICON, clock, telHref, pageHero } from '../lib.mjs';
 
 export default function contact(ctx) {
   const { t, pick } = ctx;
@@ -13,17 +13,20 @@ export default function contact(ctx) {
     `<label class="f f--sel ${cls}"><span class="f__l">${label}</span><select name="${name}">${opts.map((o) => `<option>${o}</option>`).join('')}</select></label>`;
 
   const body = `
-<section class="hero hero--short" data-theme="dark">
-  ${heroMedia(P.airportDusk, t('Silhouettes of travellers in an airport terminal at sunset', 'Sagome di viaggiatori in un terminal al tramonto'), 0.5)}
-  <div class="wrap hero__inner">
-    <p class="hero__kicker label"><span class="tag">Gate D</span>${t('Contact', 'Contatti')}</p>
-    <h1 class="d1 hero__title">${lines(t(['Let’s plan', 'your next group'], ['Organizziamo', 'il prossimo gruppo']))}</h1>
-  </div>
-</section>
+${pageHero(ctx, {
+  gate: 'D',
+  kicker: t('Contact', 'Contatti'),
+  title: t(['Let’s plan', 'your next group'], ['Organizziamo', 'il prossimo gruppo']),
+  image: P.airportDusk,
+  alt: t('Silhouettes of travellers in an airport terminal at sunset', 'Sagome di viaggiatori in un terminal al tramonto'),
+  short: true,
+  side: `<a class="hp__mail" href="mailto:${COMPANY.email}">${COMPANY.email}</a><a class="hp__tel" href="${telHref(lug.phone)}">${lug.phone}</a>`,
+  jump: [['#form', t('Request form', 'Modulo di richiesta')]],
+})}
 
 <section class="sec contact">
   <div class="wrap contact__grid">
-    <div class="contact__form">
+    <div class="contact__form" id="form">
       <p class="lead" data-r>${t('Send us the basics: destination, dates, number of travellers. We’ll reply with a few questions or a first proposal.', 'Mandateci le informazioni di base: destinazione, date, numero di partecipanti. Vi risponderemo con qualche domanda o con una prima proposta.')}</p>
       <form class="form" data-form data-endpoint="" novalidate
         data-msg-required="${t('Please fill in this field.', 'Compila questo campo.')}"

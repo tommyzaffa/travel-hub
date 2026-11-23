@@ -23,7 +23,7 @@
   else html.classList.add('no-anim');
 
   /* ---------------- hero image: fade in over the placeholder ---------------- */
-  d.querySelectorAll('.hero__media img').forEach((im) => {
+  d.querySelectorAll('[data-hero-media] img').forEach((im) => {
     const ok = () => im.classList.add('is-loaded');
     if (im.complete && im.naturalWidth) ok();
     else { im.addEventListener('load', ok, { once: true }); im.addEventListener('error', ok, { once: true }); }
@@ -239,6 +239,105 @@
   const boardFlaps = [...d.querySelectorAll('.board .flap')];
   boardFlaps.forEach((f) => prepFlap(f, anim));
 
+  /* ---------------- home hero: flip-board slideshow ---------------- */
+  const hx = d.querySelector('.hx');
+  const hxData = d.getElementById('hero-data');
+  if (hx && hxData) {
+    html.classList.add('hx-ready');
+    const data = JSON.parse(hxData.textContent);
+    const items = data.items;
+    const flapEl = hx.querySelector('[data-hero-flap]');
+    const win = hx.querySelector('.hx__win');
+    const imgs = [...win.querySelectorAll('img')];
+    const codeEl = hx.querySelector('.hx__code');
+    const nameEl = hx.querySelector('.hx__name');
+    const statusEl = hx.querySelector('.hx__plate .status');
+    const gates = [...hx.querySelectorAll('[data-go]')];
+    const bar = hx.querySelector('.hx__bar i');
+    const DUR = 4.4;
+
+    flapEl.innerHTML = Array.from({ length: data.len }, () => '<span class="c" data-f="">&nbsp;</span>').join('');
+    const cells = [...flapEl.children];
+    const flick = (c, final, delay) => {
+      const t0 = performance.now();
+      const end = delay + 240 + Math.random() * 360;
+      let last = 0;
+      const step = (now) => {
+        const t = now - t0;
+        if (t < delay) return requestAnimationFrame(step);
+        if (t >= end) { c.textContent = final || ' '; return; }
+        if (now - last > 50) { c.textContent = CHARS[(Math.random() * CHARS.length) | 0]; last = now; }
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    const flipTo = (word, animate) => {
+      const chars = [...word];
+      cells.forEach((c, i) => {
+        const f = chars[i] && chars[i] !== ' ' ? chars[i] : '';
+        if (c.dataset.f === f && c.dataset.set) return;
+        c.dataset.f = f;
+        c.dataset.set = '1';
+        if (animate) flick(c, f, i * 42);
+        else c.textContent = f || ' ';
+      });
+    };
+    const load = (i) => {
+      const im = imgs[i];
+      if (im && !im.getAttribute('src') && im.dataset.src) {
+        im.srcset = im.dataset.srcset;
+        im.src = im.dataset.src;
+      }
+      return im;
+    };
+    const reveal = (i) => {
+      const im = load(i);
+      const swap = () => { if (cur === i) imgs.forEach((x, k) => x.classList.toggle('is-on', k === i)); };
+      if (im.complete && im.naturalWidth) requestAnimationFrame(swap);
+      else im.addEventListener('load', swap, { once: true });
+    };
+
+    let cur = 0;
+    let timer = null;
+    let visible = true;
+    const restart = () => {
+      if (!anim) return;
+      if (timer) timer.kill();
+      timer = gsap.fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: DUR, ease: 'none', onComplete: () => show(cur + 1) });
+      if (!visible || d.hidden) timer.pause();
+    };
+    const show = (i, animate = anim) => {
+      cur = (i + items.length) % items.length;
+      const it = items[cur];
+      reveal(cur);
+      flipTo(it.word, animate);
+      codeEl.textContent = it.code;
+      nameEl.textContent = it.name;
+      statusEl.textContent = it.status;
+      statusEl.classList.toggle('status--req', !!it.req);
+      win.href = it.href;
+      win.dataset.label = it.label;
+      win.setAttribute('aria-label', it.name);
+      gates.forEach((g, k) => { g.classList.toggle('is-on', k === cur); g.setAttribute('aria-pressed', String(k === cur)); });
+      load((cur + 1) % items.length); // preload the next photo
+      restart();
+    };
+
+    gates.forEach((g, k) => g.addEventListener('click', () => show(k)));
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        if (timer) visible && !d.hidden ? timer.resume() : timer.pause();
+      }).observe(hx);
+    }
+    d.addEventListener('visibilitychange', () => { if (timer) d.hidden || !visible ? timer.pause() : timer.resume(); });
+
+    flipTo('', false);
+    reveal(0);
+    if (anim) setTimeout(() => show(0, true), (heroDelay + 0.45) * 1000);
+    else show(0, false);
+  }
+
   if (!anim) return; // everything below is animation only
 
   /* ---------------- helpers: split words ---------------- */
@@ -268,19 +367,25 @@
   };
 
   /* ---------------- hero entrance ---------------- */
-  const hero = d.querySelector('.hero');
+  const hero = d.querySelector('[data-hero]');
   if (hero) {
-    const media = hero.querySelector('[data-hero-media]');
-    const img = media && media.querySelector('img');
-    const lns = hero.querySelectorAll('.hero__title .ln > span');
-    const rest = hero.querySelectorAll('.hero__kicker, .hero__foot');
+    const lns = hero.querySelectorAll('.ln > span');
+    const rest = hero.querySelectorAll('[data-hero-rest]');
+    const sign = hero.querySelector('.hp__gate, .hx__arr');
+    const win = hero.querySelector('.hx__win, .hp__win');
+    const pageImg = hero.querySelector('.hp__win img');
     gsap.set(lns, { y: 0, yPercent: 108 });
-    gsap.set(rest, { opacity: 0, y: 22 });
-    if (img) gsap.fromTo(img, { scale: 1.16 }, { scale: 1, duration: 2.4, ease: 'power3.out', delay: heroDelay - 0.15 });
-    gsap.to(lns, { yPercent: 0, duration: 1.15, ease: 'power4.out', stagger: 0.09, delay: heroDelay });
-    gsap.to(rest, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.12, delay: heroDelay + 0.3 });
-    if (media) {
-      gsap.to(media, { yPercent: 16, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.set(rest, { opacity: 0, y: 20 });
+    if (sign) gsap.set(sign, { scale: 0 });
+    if (win) gsap.set(win, { clipPath: 'inset(100% 0% 0% 0%)' });
+    const tl = gsap.timeline({ delay: heroDelay });
+    tl.to(lns, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: 0.08 }, 0);
+    if (sign) tl.to(sign, { scale: 1, duration: 0.8, ease: 'back.out(2.2)' }, 0.2);
+    if (win) tl.to(win, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'power4.inOut' }, 0.05);
+    if (pageImg) tl.fromTo(pageImg, { scale: 1.2 }, { scale: 1, duration: 1.8, ease: 'power3.out' }, 0.05);
+    tl.to(rest, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08 }, 0.35);
+    if (pageImg) {
+      gsap.to(pageImg, { yPercent: 7, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
     }
   }
 

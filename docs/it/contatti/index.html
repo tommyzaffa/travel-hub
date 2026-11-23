@@ -41,7 +41,7 @@
 
 <header class="hdr" data-hdr>
   <a class="logo" href="../../it/" aria-label="Travel Hub — Home">
-    <span class="logo__word">Travel-Hub</span><svg class="logo__marks" viewBox="0 0 40 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5zM14.5 1.5 24 7l-9.5 5.5zM27.5 1.5 37 7l-9.5 5.5z"/></svg>
+    <span class="logo__word">Travel-Hub</span><svg class="logo__marks" viewBox="0 0 46 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5z"/><path d="M14.5 1.5 24 7l-9.5 5.5z"/><path d="M27.5 1.5 37 7l-9.5 5.5z"/></svg>
   </a>
   <nav class="hdr__nav" aria-label="Principale"><a href="../../it/usa-canada/">USA & Canada</a><a href="../../it/global-reach/">Global Reach</a><a href="../../it/contatti/" aria-current="page">Contatti</a></nav>
   <div class="hdr__right">
@@ -67,19 +67,30 @@
 </div>
 <main id="main">
 
-<section class="hero hero--short" data-theme="dark">
-  <div class="hero__media" data-hero-media style="background-image:url('https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&fit=crop&w=64&h=32&q=40&blur=24')">
-    <img src="https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=72" srcset="https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=480&amp;h=240&amp;q=72 480w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=800&amp;h=400&amp;q=72 800w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=72 1200w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=1600&amp;h=800&amp;q=72 1600w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=2000&amp;h=1000&amp;q=72 2000w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=2400&amp;h=1200&amp;q=72 2400w" sizes="100vw" width="2400" height="1200" alt="Sagome di viaggiatori in un terminal al tramonto" fetchpriority="high" decoding="async">
-  </div>
-  <div class="wrap hero__inner">
-    <p class="hero__kicker label"><span class="tag">Gate D</span>Contatti</p>
-    <h1 class="d1 hero__title"><span class="ln"><span>Organizziamo</span></span><span class="ln"><span>il prossimo gruppo</span></span></h1>
+
+<section class="hp hp--short" data-hero data-theme="night">
+  <div class="wrap">
+    <div class="hx__top label" data-hero-rest>
+      <span><span class="tag">Gate D</span>Contatti</span>
+      <span class="hx__clocks"><span class="clock " data-clock="America/New_York"><b>MIA</b> <span class="clock__t">--:--</span></span><span class="clock " data-clock="Europe/Zurich"><b>LUG</b> <span class="clock__t">--:--</span></span></span>
+    </div>
+    <h1 class="hp__title"><span class="hp__gate" aria-hidden="true"><span>D</span></span><span class="hp__t"><span class="ln"><span>Organizziamo</span></span><span class="ln"><span>il prossimo gruppo</span></span></span></h1>
+    <div class="hp__grid">
+      <figure class="hp__win" data-hero-media style="background-image:url('https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&fit=crop&w=64&h=24&q=40&blur=24')">
+        <img src="https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=1200&amp;h=456&amp;q=72" srcset="https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=480&amp;h=182&amp;q=72 480w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=800&amp;h=304&amp;q=72 800w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=1200&amp;h=456&amp;q=72 1200w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=1600&amp;h=608&amp;q=72 1600w, https://images.unsplash.com/photo-1561131668-f63504fc549d?auto=format&amp;fit=crop&amp;w=2000&amp;h=760&amp;q=72 2000w" sizes="(max-width: 900px) 100vw, 66vw" width="2000" height="760" alt="Sagome di viaggiatori in un terminal al tramonto" fetchpriority="high" decoding="async">
+      </figure>
+      <div class="hp__side" data-hero-rest>
+        
+        <a class="hp__mail" href="mailto:sales@travel-hub.biz">sales@travel-hub.biz</a><a class="hp__tel" href="tel:+41764833696">+41 76 483 36 96</a>
+        <nav class="hp__jump" aria-label="In questa pagina"><a href="#form"><span>Modulo di richiesta</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v15M6 13l6 6 6-6"/></svg></a></nav>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="sec contact">
   <div class="wrap contact__grid">
-    <div class="contact__form">
+    <div class="contact__form" id="form">
       <p class="lead" data-r>Mandateci le informazioni di base: destinazione, date, numero di partecipanti. Vi risponderemo con qualche domanda o con una prima proposta.</p>
       <form class="form" data-form data-endpoint="" novalidate
         data-msg-required="Compila questo campo."
@@ -148,7 +159,7 @@
   <div class="wrap">
     <div class="ftr__top">
       <div class="ftr__brand">
-        <a class="logo logo--xl" href="../../it/" aria-label="Travel Hub — Home"><span class="logo__word">Travel-Hub</span><svg class="logo__marks" viewBox="0 0 40 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5zM14.5 1.5 24 7l-9.5 5.5zM27.5 1.5 37 7l-9.5 5.5z"/></svg></a>
+        <a class="logo logo--xl" href="../../it/" aria-label="Travel Hub — Home"><span class="logo__word">Travel-Hub</span><svg class="logo__marks" viewBox="0 0 46 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5z"/><path d="M14.5 1.5 24 7l-9.5 5.5z"/><path d="M27.5 1.5 37 7l-9.5 5.5z"/></svg></a>
         <p class="ftr__tag">Viaggi di gruppo per i professionisti del turismo. Dal 2016.</p>
         <a class="ftr__mail" href="mailto:sales@travel-hub.biz">sales@travel-hub.biz</a>
       </div>
@@ -179,7 +190,7 @@
       <span>IDI CHE-385.849.577</span>
       <span>IATA 96001872</span>
       <span class="ftr__lang"><a href="../../contact/" data-lang="en">English</a> · <a href="../../it/contatti/" data-lang="it">Italiano</a></span>
-      <span class="ftr__credit">Sito di Digitam</span>
+      <span class="ftr__credit">Sito di <a href="https://digitam.ch" target="_blank" rel="noopener">Digitam</a></span>
     </div>
   </div>
 </footer>

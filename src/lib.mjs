@@ -16,29 +16,61 @@ export const ICON = {
   ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
 };
 
+// three triangles from the Travel-Hub logo; extra room in the viewBox so the hover nudge never clips
 export const marks = (cls = 'logo__marks') =>
-  `<svg class="${cls}" viewBox="0 0 40 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5zM14.5 1.5 24 7l-9.5 5.5zM27.5 1.5 37 7l-9.5 5.5z"/></svg>`;
+  `<svg class="${cls}" viewBox="0 0 46 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5z"/><path d="M14.5 1.5 24 7l-9.5 5.5z"/><path d="M27.5 1.5 37 7l-9.5 5.5z"/></svg>`;
 
 /* ---------- images (Unsplash CDN, responsive) ---------- */
 export function img(id, o = {}) {
-  const { w = 1600, ratio = 2 / 3, alt = '', sizes = '100vw', cls = '', eager = false, crop = '' } = o;
+  const { w = 1600, ratio = 2 / 3, alt = '', sizes = '100vw', cls = '', eager = false, crop = '', defer = false } = o;
   const widths = [480, 800, 1200, 1600, 2000, 2600].filter((x) => x < w);
   widths.push(w);
   const u = (x) =>
     `https://images.unsplash.com/photo-${id}?auto=format&amp;fit=crop&amp;w=${x}&amp;h=${Math.round(x * ratio)}&amp;q=72${crop ? `&amp;crop=${crop}` : ''}`;
   const src = u(Math.min(w, 1200));
-  return `<img src="${src}" srcset="${widths.map((x) => `${u(x)} ${x}w`).join(', ')}" sizes="${sizes}" width="${w}" height="${Math.round(w * ratio)}" alt="${esc(alt)}"${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async"${cls ? ` class="${cls}"` : ''}>`;
+  const set = widths.map((x) => `${u(x)} ${x}w`).join(', ');
+  // defer: the script sets src/srcset when the image is actually needed (hero slideshow)
+  const sources = defer ? `data-src="${src}" data-srcset="${set}"` : `src="${src}" srcset="${set}"`;
+  return `<img ${sources} sizes="${sizes}" width="${w}" height="${Math.round(w * ratio)}" alt="${esc(alt)}"${eager ? ' fetchpriority="high"' : defer ? '' : ' loading="lazy"'} decoding="async"${cls ? ` class="${cls}"` : ''}>`;
 }
+export const placeholder = (id, ratio) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=64&h=${Math.round(64 * ratio)}&q=40&blur=24`;
 export const imgUrl = (id, w = 900, ratio = 0.75) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${Math.round(w * ratio)}&q=70`;
 
-/* full-bleed hero image with an instant low-res placeholder underneath */
-export const heroMedia = (id, alt, ratio = 0.62) => {
-  const ph = `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=64&h=${Math.round(64 * ratio)}&q=40&blur=24`;
-  return `<div class="hero__media" data-hero-media style="background-image:url('${ph}')">
-    ${img(id, { w: 2400, ratio, eager: true, alt })}
-  </div>`;
-};
+/* inner-page hero: a gate sign above a photo "window" */
+export function pageHero(ctx, o) {
+  const { t, url } = ctx;
+  const { gate, kicker, title, sub, image, alt, jump = [], short = false, side = '' } = o;
+  const [mia, lug] = COMPANY.offices;
+  const ratio = short ? 0.38 : 0.5;
+  return `
+<section class="hp${short ? ' hp--short' : ''}" data-hero data-theme="night">
+  <div class="wrap">
+    <div class="hx__top label" data-hero-rest>
+      <span><span class="tag">${t('Gate', 'Gate')} ${gate}</span>${kicker}</span>
+      <span class="hx__clocks">${clock(ctx, mia)}${clock(ctx, lug)}</span>
+    </div>
+    <h1 class="hp__title"><span class="hp__gate" aria-hidden="true"><span>${gate}</span></span><span class="hp__t">${lines(title)}</span></h1>
+    <div class="hp__grid">
+      <figure class="hp__win" data-hero-media style="background-image:url('${placeholder(image, ratio)}')">
+        ${img(image, { w: 2000, ratio, eager: true, alt, sizes: '(max-width: 900px) 100vw, 66vw' })}
+      </figure>
+      <div class="hp__side" data-hero-rest>
+        ${sub ? `<p class="hp__sub">${sub}</p>` : ''}
+        ${side}
+        ${
+          jump.length
+            ? `<nav class="hp__jump" aria-label="${t('On this page', 'In questa pagina')}">${jump
+                .map(([href, label]) => `<a href="${href}"><span>${label}</span>${ICON.arrowDown}</a>`)
+                .join('')}</nav>`
+            : ''
+        }
+      </div>
+    </div>
+  </div>
+</section>`;
+}
 
 /* ---------- context ---------- */
 export function makeCtx(lang, key) {
@@ -171,7 +203,7 @@ function footer(ctx) {
       <span>${t('UID', 'IDI')} ${COMPANY.uid}</span>
       <span>IATA ${COMPANY.iata}</span>
       <span class="ftr__lang"><a href="${url(ctx.key, 'en')}" data-lang="en">English</a> · <a href="${url(ctx.key, 'it')}" data-lang="it">Italiano</a></span>
-      <span class="ftr__credit">${t('Website by', 'Sito di')} Digitam</span>
+      <span class="ftr__credit">${t('Website by', 'Sito di')} <a href="https://digitam.ch" target="_blank" rel="noopener">Digitam</a></span>
     </div>
   </div>
 </footer>`;

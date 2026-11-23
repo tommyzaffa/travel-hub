@@ -1,5 +1,5 @@
 import { P } from '../data.mjs';
-import { img, imgUrl, btn, lines, ctaBand, heroMedia } from '../lib.mjs';
+import { img, imgUrl, btn, lines, ctaBand, pageHero } from '../lib.mjs';
 
 export default function global(ctx) {
   const { t, url } = ctx;
@@ -21,21 +21,15 @@ export default function global(ctx) {
   ];
 
   const body = `
-<section class="hero hero--page" data-theme="dark">
-  ${heroMedia(P.lofoten, t('Red fishermen’s cabins below a granite peak in the Lofoten islands', 'Capanne rosse dei pescatori sotto un picco di granito alle Lofoten'), 0.62)}
-  <div class="wrap hero__inner">
-    <p class="hero__kicker label"><span class="tag">Gate C</span>${t('Beyond North America', 'Oltre il Nord America')}</p>
-    <h1 class="d1 hero__title">${lines(['Global', 'Reach'])}</h1>
-    <div class="hero__foot">
-      <p class="hero__sub">${t('The same method, other horizons: the Nordics and, on request, other destinations around the world.', 'Lo stesso metodo, altri orizzonti: i Paesi nordici e, su richiesta, altre destinazioni nel mondo.')}</p>
-      <nav class="hero__jump" aria-label="${t('On this page', 'In questa pagina')}">
-        <a href="#nordics">${t('The Nordics', 'Paesi nordici')}</a>
-        <a href="#on-request">${t('On request', 'Su richiesta')}</a>
-        <a href="#services">${t('Services', 'Servizi')}</a>
-      </nav>
-    </div>
-  </div>
-</section>
+${pageHero(ctx, {
+  gate: 'C',
+  kicker: t('Beyond North America', 'Oltre il Nord America'),
+  title: ['Global Reach'],
+  sub: t('The same method, other horizons: the Nordics and, on request, other destinations around the world.', 'Lo stesso metodo, altri orizzonti: i Paesi nordici e, su richiesta, altre destinazioni nel mondo.'),
+  image: P.lofoten,
+  alt: t('Red fishermen’s cabins below a granite peak in the Lofoten islands', 'Capanne rosse dei pescatori sotto un picco di granito alle Lofoten'),
+  jump: [['#nordics', t('The Nordics', 'Paesi nordici')], ['#on-request', t('On request', 'Su richiesta')], ['#services', t('Services', 'Servizi')]],
+})}
 
 <section class="sec intro">
   <div class="wrap intro__grid">

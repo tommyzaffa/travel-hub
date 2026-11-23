@@ -1,5 +1,5 @@
 import { P, COMPANY } from '../data.mjs';
-import { img, imgUrl, btn, lines, ctaBand, ICON, clock, esc, heroMedia } from '../lib.mjs';
+import { img, imgUrl, btn, lines, ctaBand, ICON, clock, esc, placeholder } from '../lib.mjs';
 
 // "4/3" (w/h) -> 0.75 (h/w)
 const hw = (r) => {
@@ -10,6 +10,19 @@ const hw = (r) => {
 export default function home(ctx) {
   const { t, url } = ctx;
   const [mia, lug] = COMPANY.offices;
+
+  // hero flip-board: one destination at a time (word max 12 characters)
+  const boarding = t('Boarding', 'Imbarco');
+  const heroDest = [
+    { code: 'JFK', word: 'NEW YORK', name: 'New York', img: P.nyc, href: url('usa'), alt: t('Manhattan and the Brooklyn Bridge', 'Manhattan e il ponte di Brooklyn') },
+    { code: 'LAS', word: 'GRAND CANYON', name: t('Grand Canyon · Western parks', 'Grand Canyon · Parchi dell’Ovest'), img: P.grandCanyon, href: url('usa') + '#itin-west', alt: t('The Colorado River in the Grand Canyon', 'Il fiume Colorado nel Grand Canyon') },
+    { code: 'BOS', word: 'NEW ENGLAND', name: t('New England · Boston & Maine', 'New England · Boston e Maine'), img: P.lighthouse, href: url('usa') + '#itin-newengland', alt: t('Portland Head Light, Maine', 'Portland Head Light, Maine') },
+    { code: 'SFO', word: 'CALIFORNIA', name: t('California · Big Sur', 'California · Big Sur'), img: P.bigsur, href: url('usa') + '#more', alt: t('Bixby Bridge on the Big Sur coast', 'Il Bixby Bridge sulla costa di Big Sur') },
+    { code: 'YYC', word: 'BANFF', name: t('Banff · Canadian Rockies', 'Banff · Rocciose canadesi'), img: P.moraine, href: url('usa') + '#canada', alt: t('Moraine Lake in Banff National Park', 'Il Moraine Lake nel parco di Banff') },
+    { code: 'YQB', word: 'QUÉBEC', name: t('Québec City · Canada', 'Québec City · Canada'), img: P.quebec, href: url('usa') + '#canada', alt: t('Château Frontenac in Québec City', 'Lo Château Frontenac a Québec City') },
+    { code: 'ANC', word: 'ALASKA', name: t('Alaska · Glaciers', 'Alaska · Ghiacciai'), img: P.alaska, href: url('usa') + '#more', alt: t('A glacier in Alaska', 'Un ghiacciaio in Alaska') },
+    { code: 'OSL', word: t('NORWAY', 'NORVEGIA'), name: t('Norway · Nordics', 'Norvegia · Paesi nordici'), img: P.norway, href: url('global'), alt: t('A red house on a Norwegian fjord', 'Una casa rossa su un fiordo norvegese'), req: true },
+  ].map((d) => ({ ...d, status: d.req ? t('On request', 'Su richiesta') : boarding, label: d.req ? 'Global Reach' : 'USA & Canada' }));
 
   const departures = [
     { code: 'JFK', dest: t('NEW YORK', 'NEW YORK'), fmt: t('Cities & culture', 'Città e cultura'), img: P.nyc, href: url('usa'), on: true },
@@ -40,20 +53,50 @@ export default function home(ctx) {
   ];
 
   const body = `
-<section class="hero" data-theme="dark">
-  ${heroMedia(P.monumentRoad, t('A straight road leading to the red buttes of Monument Valley', 'Una strada dritta verso le rocce rosse della Monument Valley'), 0.62)}
-  <div class="wrap hero__inner">
-    <p class="hero__kicker label"><span class="tag">B2B</span>${t('Group travel · Since 2016', 'Viaggi di gruppo · Dal 2016')}</p>
-    <h1 class="d1 hero__title">${lines([t('Group travel', 'Viaggi di gruppo'), t('in North America', 'in Nord America')])}</h1>
-    <div class="hero__foot">
-      <p class="hero__sub">${t('We are the ground team behind agencies and tour operators who send groups to the USA and Canada: itineraries, hotels, transport, guides, and someone on site when it matters.', 'Siamo il team operativo dietro alle agenzie e ai tour operator che portano gruppi negli Stati Uniti e in Canada: itinerari, hotel, trasporti, guide e qualcuno sul posto quando serve.')}</p>
-      <div class="hero__cta">
-        ${btn(url('contact'), t('Request a proposal', 'Richiedi una proposta'))}
-        ${btn(url('usa'), t('USA & Canada', 'USA & Canada'), 'ghost')}
+<section class="hx" data-hero data-theme="night">
+  <div class="wrap hx__wrap">
+    <div class="hx__top label" data-hero-rest>
+      <span><span class="tag">B2B</span>${t('Group travel for the travel trade · Since 2016', 'Viaggi di gruppo per il trade turistico · Dal 2016')}</span>
+      <span class="hx__clocks">${clock(ctx, mia)}${clock(ctx, lug)}</span>
+    </div>
+    <div class="hx__grid">
+      <div class="hx__head">
+        <h1 class="hx__title">${lines(t(['Group', 'travel'], ['Viaggi', 'di gruppo']))}<span class="sr-only"> ${t('to the USA, Canada and beyond', 'verso USA, Canada e oltre')}</span></h1>
+        <div class="hx__dest" aria-hidden="true">
+          <span class="hx__arr">${ICON.arrow}</span>
+          <span class="flap flap--hero" data-hero-flap>${esc(heroDest[0].word)}</span>
+        </div>
       </div>
-      <div class="hero__meta">${clock(ctx, mia)}${clock(ctx, lug)}</div>
+      <div class="hx__media">
+        <a class="hx__win" href="${heroDest[0].href}" data-label="${esc(heroDest[0].label)}" aria-label="${esc(heroDest[0].name)}" style="background-image:url('${placeholder(heroDest[0].img, 1.15)}')">
+          ${heroDest.map((d, i) => img(d.img, { w: 1400, ratio: 1.15, alt: d.alt, sizes: '(max-width: 900px) 100vw, 36vw', eager: i === 0, defer: i > 0 })).join('\n          ')}
+          <span class="hx__bar" aria-hidden="true"><i></i></span>
+          <span class="hx__plate">
+            <b class="hx__code">${heroDest[0].code}</b>
+            <span class="hx__name">${esc(heroDest[0].name)}</span>
+            <span class="status">${heroDest[0].status}</span>
+          </span>
+        </a>
+      </div>
+      <div class="hx__body" data-hero-rest>
+        <p class="hx__sub">${t('We are the ground team behind agencies and tour operators who send groups to the USA and Canada: itineraries, hotels, transport, guides, and someone on site when it matters.', 'Siamo il team operativo dietro alle agenzie e ai tour operator che portano gruppi negli Stati Uniti e in Canada: itinerari, hotel, trasporti, guide e qualcuno sul posto quando serve.')}</p>
+        <div class="hx__cta">
+          ${btn(url('contact'), t('Request a proposal', 'Richiedi una proposta'))}
+          ${btn(url('usa'), t('USA & Canada', 'USA & Canada'), 'ghost')}
+        </div>
+      </div>
+    </div>
+    <div class="hx__gates" data-hero-rest>
+      <span class="label">${t('Next departures', 'Prossime partenze')}</span>
+      <ol>
+        ${heroDest.map((d, i) => `<li><button type="button" data-go="${i}" aria-label="${esc(d.name)}"${i === 0 ? ' class="is-on" aria-pressed="true"' : ' aria-pressed="false"'}>${d.code}</button></li>`).join('')}
+      </ol>
     </div>
   </div>
+  <script type="application/json" id="hero-data">${JSON.stringify({
+    len: Math.max(...heroDest.map((d) => [...d.word].length)),
+    items: heroDest.map(({ code, word, name, href, label, status, req }) => ({ code, word, name, href, label, status, req })),
+  }).replace(/</g, '\\u003c')}</script>
 </section>
 
 <section class="sec statement">

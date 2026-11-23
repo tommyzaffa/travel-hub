@@ -1,5 +1,5 @@
 import { P, COMPANY, SITE_URL } from '../data.mjs';
-import { img, imgUrl, btn, lines, ctaBand, ICON, clock, heroMedia } from '../lib.mjs';
+import { img, imgUrl, btn, lines, ctaBand, ICON, clock, pageHero } from '../lib.mjs';
 
 export default function usa(ctx) {
   const { t, url, abs } = ctx;
@@ -126,22 +126,15 @@ export default function usa(ctx) {
     .join('');
 
   const body = `
-<section class="hero hero--page" data-theme="dark">
-  ${heroMedia(P.grandCanyon, t('The Colorado River winding through the Grand Canyon', 'Il fiume Colorado che attraversa il Grand Canyon'), 0.62)}
-  <div class="wrap hero__inner">
-    <p class="hero__kicker label"><span class="tag">Gate B</span>${t('North America', 'Nord America')}</p>
-    <h1 class="d1 hero__title">${lines(['USA', '&amp; Canada'])}</h1>
-    <div class="hero__foot">
-      <p class="hero__sub">${t('From the national parks of the West to the coast of Maine, from the Rockies to Québec: the routes we know best, for groups of every size.', 'Dai parchi nazionali dell’Ovest alla costa del Maine, dalle Montagne Rocciose al Québec: gli itinerari che conosciamo meglio, per gruppi di ogni dimensione.')}</p>
-      <nav class="hero__jump" aria-label="${t('On this page', 'In questa pagina')}">
-        <a href="#small-groups">Small group tours</a>
-        <a href="#assistance">${t('On-site assistance', 'Assistenza sul posto')}</a>
-        <a href="#itineraries">${t('Itineraries', 'Itinerari')}</a>
-        <a href="#canada">Canada</a>
-      </nav>
-    </div>
-  </div>
-</section>
+${pageHero(ctx, {
+  gate: 'B',
+  kicker: t('North America', 'Nord America'),
+  title: ['USA &amp; Canada'],
+  sub: t('From the national parks of the West to the coast of Maine, from the Rockies to Québec: the routes we know best, for groups of every size.', 'Dai parchi nazionali dell’Ovest alla costa del Maine, dalle Montagne Rocciose al Québec: gli itinerari che conosciamo meglio, per gruppi di ogni dimensione.'),
+  image: P.grandCanyon,
+  alt: t('The Colorado River winding through the Grand Canyon', 'Il fiume Colorado che attraversa il Grand Canyon'),
+  jump: [['#small-groups', 'Small group tours'], ['#assistance', t('On-site assistance', 'Assistenza sul posto')], ['#itineraries', t('Itineraries', 'Itinerari')], ['#canada', 'Canada']],
+})}
 
 <section class="sec intro">
   <div class="wrap intro__grid">
