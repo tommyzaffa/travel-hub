@@ -553,7 +553,7 @@
     input.setAttribute('aria-invalid', m ? 'true' : 'false');
     return !m;
   };
-  const fields = [...form.querySelectorAll('input[required], input[type="email"]')];
+  const fields = [...form.querySelectorAll('input[required], textarea[required], input[type="email"]')];
   fields.forEach((i) => {
     i.addEventListener('blur', () => { if (i.value || i.type === 'checkbox') check(i); });
     i.addEventListener('input', () => { if (i.closest('.is-bad')) check(i); });

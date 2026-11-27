@@ -1,9 +1,9 @@
 import { P, COMPANY } from '../data.mjs';
-import { img, imgUrl, lines, ICON, clock, telHref, pageHero } from '../lib.mjs';
+import { imgUrl, ICON, clock, telHref, pageHero } from '../lib.mjs';
 
 export default function contact(ctx) {
   const { t, pick } = ctx;
-  const [mia, lug, ita] = COMPANY.offices;
+  const [lug, nyc, ita] = COMPANY.offices;
 
   const field = (name, label, o = {}) => {
     const { type = 'text', req = false, ph = '', ac = '', cls = '' } = o;
@@ -14,20 +14,20 @@ export default function contact(ctx) {
 
   const body = `
 ${pageHero(ctx, {
-  gate: 'D',
+  gate: 'E',
   kicker: t('Contact', 'Contatti'),
   title: t(['Let’s plan', 'your next group'], ['Organizziamo', 'il prossimo gruppo']),
   image: P.airportDusk,
   alt: t('Silhouettes of travellers in an airport terminal at sunset', 'Sagome di viaggiatori in un terminal al tramonto'),
   short: true,
   side: `<a class="hp__mail" href="mailto:${COMPANY.email}">${COMPANY.email}</a><a class="hp__tel" href="${telHref(lug.phone)}">${lug.phone}</a>`,
-  jump: [['#form', t('Request form', 'Modulo di richiesta')]],
+  jump: [['#form', t('Quote request', 'Richiesta di preventivo')]],
 })}
 
 <section class="sec contact">
   <div class="wrap contact__grid">
     <div class="contact__form" id="form">
-      <p class="lead" data-r>${t('Send us the basics: destination, dates, number of travellers. We’ll reply with a few questions or a first proposal.', 'Mandateci le informazioni di base: destinazione, date, numero di partecipanti. Vi risponderemo con qualche domanda o con una prima proposta.')}</p>
+      <p class="lead" data-r>${t('Destination, dates, group size and the itinerary you have in mind: that’s all we need to start.', 'Destinazione, periodo, numero di persone e l’itinerario che avete in mente: è tutto ciò che serve per partire.')}</p>
       <form class="form" data-form data-endpoint="" novalidate
         data-msg-required="${t('Please fill in this field.', 'Compila questo campo.')}"
         data-msg-email="${t('Please enter a valid email address.', 'Inserisci un indirizzo email valido.')}"
@@ -42,13 +42,14 @@ ${pageHero(ctx, {
             t('Group tour', 'Tour di gruppo'),
             'Small group tour',
             t('Incentive or business travel', 'Incentive o viaggio aziendale'),
+            t('Self-drive or private tour', 'Self-drive o tour privato'),
             t('Services only (hotels, transfers, guides)', 'Solo servizi (hotel, transfer, guide)'),
             t('Other', 'Altro'),
           ])}
           ${select('destination', t('Destination', 'Destinazione'), ['USA', 'Canada', 'USA + Canada', t('Nordics', 'Paesi nordici'), t('Other', 'Altro')])}
-          ${field('period', t('Travel period', 'Periodo di viaggio'), { ph: t('e.g. May 2027', 'es. maggio 2027') })}
+          ${field('period', t('Travel period', 'Periodo di viaggio'), { req: true, ph: t('e.g. May 2027, even approximate', 'es. maggio 2027, anche indicativo') })}
           ${field('pax', t('Number of travellers', 'Numero di partecipanti'), { type: 'number', ph: t('e.g. 24', 'es. 24') })}
-          <label class="f f--full"><span class="f__l">${t('Message', 'Messaggio')}</span><textarea name="message" rows="5" placeholder="${t('Itinerary ideas, hotel category, special requests…', 'Idee di itinerario, categoria degli hotel, richieste particolari…')}"></textarea></label>
+          <label class="f f--full"><span class="f__l">${t('Tell us about the itinerary you have in mind', 'Raccontateci l’itinerario che avete in mente')} <i aria-hidden="true">*</i></span><textarea name="message" rows="5" required placeholder="${t('Stops, duration, hotel category, special requests…', 'Tappe, durata, categoria degli hotel, richieste particolari…')}"></textarea><span class="f__err" aria-live="polite"></span></label>
         </div>
         <label class="check"><input type="checkbox" name="consent" required><span class="check__box" aria-hidden="true"></span><span>${t('I agree that Travel Hub may use these details to reply to my request.', 'Acconsento all’uso di questi dati da parte di Travel Hub per rispondere alla mia richiesta.')}</span><span class="f__err" aria-live="polite"></span></label>
         <div class="form__foot">
@@ -58,7 +59,7 @@ ${pageHero(ctx, {
         <div class="form__done" role="status" hidden>
           <span class="form__done-ic">${ICON.plane}</span>
           <h2 class="d3">${t('Request received', 'Richiesta ricevuta')}</h2>
-          <p class="lead">${t('Thank you. We’ll get back to you shortly with questions or a first proposal.', 'Grazie. Vi ricontatteremo a breve con qualche domanda o con una prima proposta.')}</p>
+          <p class="lead">${t('Thank you. We’ll get back to you shortly.', 'Grazie. Vi ricontatteremo a breve.')}</p>
         </div>
         <p class="form__fail" role="alert" hidden>${t('Something went wrong. Please write to', 'Qualcosa non ha funzionato. Scriveteci a')} <a href="mailto:${COMPANY.email}">${COMPANY.email}</a></p>
       </form>
@@ -73,14 +74,13 @@ ${pageHero(ctx, {
         <p class="label">${t('Phone', 'Telefono')}</p>
         <ul class="contact__tels">
           <li><span>${t('Switzerland', 'Svizzera')}</span><a href="${telHref(lug.phone)}">${lug.phone}</a></li>
-          <li><span>USA</span><a href="${telHref(mia.phone)}">${mia.phone}</a></li>
-          <li><span>${t('Italy · booking', 'Italia · booking')}</span><a href="${telHref(ita.phone)}">${ita.phone}</a></li>
-          <li><span></span><a href="${telHref(ita.phone2)}">${ita.phone2}</a></li>
+          <li><span>USA</span><a href="${telHref(nyc.phone)}">${nyc.phone}</a></li>
+          <li><span>${t('Italy', 'Italia')}</span><a href="${telHref(ita.phone)}">${ita.phone}</a></li>
         </ul>
       </div>
       <div class="contact__block contact__offices" data-r>
         <p class="label">${t('Offices', 'Sedi')}</p>
-        ${[mia, lug]
+        ${[lug, nyc]
           .map(
             (o) => `
         <div class="office">
@@ -99,8 +99,8 @@ ${pageHero(ctx, {
   return {
     title: t('Contact — Travel Hub', 'Contatti — Travel Hub'),
     description: t(
-      'Request a proposal for your group. Travel Hub, offices in Miami and Bioggio (Lugano): sales@travel-hub.biz, +41 76 483 36 96, +1 786 654 4670.',
-      'Richiedi una proposta per il tuo gruppo. Travel Hub, sedi a Miami e Bioggio (Lugano): sales@travel-hub.biz, +41 76 483 36 96, +1 786 654 4670.'
+      'Request a quote for your group. Travel Hub, offices in Lugano and New York: sales@travel-hub.biz, +41 76 483 36 96, +1 646 269 7133.',
+      'Richiedete un preventivo per il vostro gruppo. Travel Hub, sedi a Lugano e New York: sales@travel-hub.biz, +41 76 483 36 96, +1 646 269 7133.'
     ),
     ogImage: imgUrl(P.airportDusk, 1200, 0.525),
     body,

@@ -1,4 +1,5 @@
 import { COMPANY, PAGES, NAV, SITE_URL, DEMO } from './data.mjs';
+import { logoSvg } from './logo.mjs';
 
 export const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -15,10 +16,6 @@ export const ICON = {
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
 };
-
-// three triangles from the Travel-Hub logo; extra room in the viewBox so the hover nudge never clips
-export const marks = (cls = 'logo__marks') =>
-  `<svg class="${cls}" viewBox="0 0 46 14" aria-hidden="true"><path d="M1.5 1.5 11 7l-9.5 5.5z"/><path d="M14.5 1.5 24 7l-9.5 5.5z"/><path d="M27.5 1.5 37 7l-9.5 5.5z"/></svg>`;
 
 /* ---------- images (Unsplash CDN, responsive) ---------- */
 export function img(id, o = {}) {
@@ -42,16 +39,16 @@ export const imgUrl = (id, w = 900, ratio = 0.75) =>
 export function pageHero(ctx, o) {
   const { t, url } = ctx;
   const { gate, kicker, title, sub, image, alt, jump = [], short = false, side = '' } = o;
-  const [mia, lug] = COMPANY.offices;
+  const [lug, nyc] = COMPANY.offices;
   const ratio = short ? 0.38 : 0.5;
   return `
 <section class="hp${short ? ' hp--short' : ''}" data-hero data-theme="night">
   <div class="wrap">
     <div class="hx__top label" data-hero-rest>
       <span><span class="tag">${t('Gate', 'Gate')} ${gate}</span>${kicker}</span>
-      <span class="hx__clocks">${clock(ctx, mia)}${clock(ctx, lug)}</span>
+      <span class="hx__clocks">${clock(ctx, lug)}${clock(ctx, nyc)}</span>
     </div>
-    <h1 class="hp__title"><span class="hp__gate" aria-hidden="true"><span>${gate}</span></span><span class="hp__t">${lines(title)}</span></h1>
+    <h1 class="hp__title${title.length > 2 ? ' hp__title--3' : ''}"><span class="hp__gate" aria-hidden="true"><span>${gate}</span></span><span class="hp__t">${lines(title)}</span></h1>
     <div class="hp__grid">
       <figure class="hp__win" data-hero-media style="background-image:url('${placeholder(image, ratio)}')">
         ${img(image, { w: 2000, ratio, eager: true, alt, sizes: '(max-width: 900px) 100vw, 66vw' })}
@@ -98,19 +95,14 @@ export const lines = (arr) => arr.map((l) => `<span class="ln"><span>${l}</span>
 
 export function ctaBand(ctx, o = {}) {
   const { t, url } = ctx;
-  const [mia, lug, ita] = COMPANY.offices;
+  const [lug, nyc, ita] = COMPANY.offices;
   const title = o.title || t('Got a group<br>in mind?', 'Avete un gruppo<br>in mente?');
-  const text =
-    o.text ||
-    t(
-      'Tell us where, when and how many. We’ll come back with questions or a first proposal.',
-      'Diteci dove, quando e in quanti. Vi risponderemo con qualche domanda o con una prima proposta.'
-    );
+  const text = o.text || t('An idea is enough. We’ll build the journey together.', 'Basta un’idea. Il viaggio lo costruiamo insieme.');
   return `
 <section class="cta-band" data-theme="sign">
   <div class="wrap cta-band__grid">
     <div class="cta-band__l">
-      <p class="label">${t('Request a proposal', 'Richiedi una proposta')}</p>
+      <p class="label">${t('Contact', 'Contatti')}</p>
       <h2 class="d2" data-split>${title}</h2>
     </div>
     <div class="cta-band__r" data-r>
@@ -118,10 +110,10 @@ export function ctaBand(ctx, o = {}) {
       <a class="cta-band__mail" href="mailto:${COMPANY.email}">${COMPANY.email}</a>
       <ul class="cta-band__tels">
         <li><span class="label">CH</span><a href="${telHref(lug.phone)}">${lug.phone}</a></li>
-        <li><span class="label">USA</span><a href="${telHref(mia.phone)}">${mia.phone}</a></li>
+        <li><span class="label">USA</span><a href="${telHref(nyc.phone)}">${nyc.phone}</a></li>
         <li><span class="label">IT</span><a href="${telHref(ita.phone)}">${ita.phone}</a></li>
       </ul>
-      ${ctx.key === 'contact' ? '' : btn(url('contact') + (o.query || ''), t('Open the request form', 'Apri il modulo di richiesta'), 'ink')}
+      ${ctx.key === 'contact' ? '' : btn(url('contact') + (o.query || ''), t('Request a quote', 'Richiedi un preventivo'), 'ink')}
     </div>
   </div>
 </section>`;
@@ -135,9 +127,7 @@ function header(ctx) {
     .join('');
   return `
 <header class="hdr" data-hdr>
-  <a class="logo" href="${url('home')}" aria-label="Travel Hub — Home">
-    <span class="logo__word">Travel-Hub</span>${marks()}
-  </a>
+  <a class="logo" href="${url('home')}" aria-label="Travel Hub — Home">${logoSvg()}</a>
   <nav class="hdr__nav" aria-label="${t('Main', 'Principale')}">${links}</nav>
   <div class="hdr__right">
     <div class="lang" role="group" aria-label="${t('Language', 'Lingua')}">
@@ -145,7 +135,7 @@ function header(ctx) {
       <span aria-hidden="true">/</span>
       <a href="${url(key, 'it')}" hreflang="it" lang="it" data-lang="it"${lang === 'it' ? ' class="is-on" aria-current="true"' : ''}>IT</a>
     </div>
-    ${key === 'contact' ? '' : `<a class="hdr__cta" href="${url('contact')}"><span>${t('Request a proposal', 'Richiedi una proposta')}</span>${ICON.arrow}</a>`}
+    ${key === 'contact' ? '' : `<a class="hdr__cta" href="${url('contact')}"><span>${t('Request a quote', 'Richiedi un preventivo')}</span>${ICON.arrow}</a>`}
     <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="${t('Open menu', 'Apri il menu')}" data-label-close="${t('Close menu', 'Chiudi il menu')}"><span></span><span></span></button>
   </div>
   <span class="hdr__progress" aria-hidden="true"></span>
@@ -154,7 +144,7 @@ function header(ctx) {
 
 function menu(ctx) {
   const { t, url, lang, key } = ctx;
-  const [mia, lug] = COMPANY.offices;
+  const [lug, nyc] = COMPANY.offices;
   return `
 <div class="menu" id="menu" aria-hidden="true">
   <nav class="menu__links" aria-label="${t('Menu', 'Menu')}">
@@ -165,7 +155,7 @@ function menu(ctx) {
   </nav>
   <div class="menu__foot">
     <a href="mailto:${COMPANY.email}" class="menu__mail">${COMPANY.email}</a>
-    <div class="menu__clocks">${clock(ctx, mia)}${clock(ctx, lug)}</div>
+    <div class="menu__clocks">${clock(ctx, lug)}${clock(ctx, nyc)}</div>
   </div>
 </div>`;
 }
@@ -178,7 +168,7 @@ function footer(ctx) {
       <div class="ftr__office">
         <p class="label">${p(o.role)} ${o.key === 'ita' ? '' : clock(ctx, o, 'clock--sm')}</p>
         <p class="ftr__city">${p(o.city)}</p>
-        <p>${o.lines.map((l) => p(l)).join('<br>')}${o.lines.length ? '<br>' : ''}<a href="${telHref(o.phone)}">${o.phone}</a>${o.phone2 ? `<br><a href="${telHref(o.phone2)}">${o.phone2}</a>` : ''}</p>
+        <p>${o.lines.map((l) => p(l)).join('<br>')}${o.lines.length ? '<br>' : ''}<a href="${telHref(o.phone)}">${o.phone}</a></p>
       </div>`
     )
     .join('');
@@ -187,8 +177,8 @@ function footer(ctx) {
   <div class="wrap">
     <div class="ftr__top">
       <div class="ftr__brand">
-        <a class="logo logo--xl" href="${url('home')}" aria-label="Travel Hub — Home"><span class="logo__word">Travel-Hub</span>${marks()}</a>
-        <p class="ftr__tag">${t('Group travel for the travel trade. Since 2016.', 'Viaggi di gruppo per i professionisti del turismo. Dal 2016.')}</p>
+        <a class="logo logo--xl" href="${url('home')}" aria-label="Travel Hub — Home">${logoSvg()}</a>
+        <p class="ftr__tag">${COMPANY.slogan}</p>
         <a class="ftr__mail" href="mailto:${COMPANY.email}">${COMPANY.email}</a>
       </div>
       <nav class="ftr__nav" aria-label="${t('Footer', 'Piè di pagina')}">
@@ -216,37 +206,32 @@ export function layout(ctx, page) {
   const alt = lang === 'en' ? 'it' : 'en';
   const fonts =
     'https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap';
+  const [lug, nyc] = COMPANY.offices;
   const org = {
     '@type': 'TravelAgency',
     '@id': SITE_URL + '/#org',
     name: COMPANY.brand,
     legalName: COMPANY.legal,
+    slogan: COMPANY.slogan,
     url: SITE_URL + '/',
     email: COMPANY.email,
-    telephone: COMPANY.offices[0].phone,
+    telephone: lug.phone,
     foundingDate: String(COMPANY.since),
     knowsLanguage: ['en', 'it'],
     areaServed: ['US', 'CA', 'NO', 'IS', 'FI', 'SE', 'DK'],
     sameAs: [COMPANY.instagram],
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '1975 NE 24th Ct',
-      addressLocality: 'Miami',
-      addressRegion: 'FL',
-      postalCode: '33180',
-      addressCountry: 'US',
+      streetAddress: 'Salita Cuccarello 4b',
+      addressLocality: 'Bioggio',
+      postalCode: '6934',
+      addressCountry: 'CH',
     },
     department: {
       '@type': 'TravelAgency',
-      name: 'Travel Hub — Switzerland',
-      telephone: COMPANY.offices[1].phone,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Salita Cuccarello 4b',
-        addressLocality: 'Bioggio',
-        postalCode: '6934',
-        addressCountry: 'CH',
-      },
+      name: 'Travel Hub — New York',
+      telephone: nyc.phone,
+      address: { '@type': 'PostalAddress', addressLocality: 'New York', addressRegion: 'NY', postalCode: '10022', addressCountry: 'US' },
     },
   };
   const ld = { '@context': 'https://schema.org', '@graph': [org, ...jsonld] };
@@ -287,8 +272,8 @@ ${ogImage ? `<meta property="og:image" content="${ogImage}">\n<meta name="twitte
 <a class="skip" href="#main">${t('Skip to content', 'Vai al contenuto')}</a>
 <div class="intro-screen" aria-hidden="true">
   <div class="intro-screen__in">
-    <span class="flap flap--intro" data-text="TRAVEL HUB">TRAVEL HUB</span>
-    <span class="label intro-screen__sub">MIA <i>⇄</i> LUG</span>
+    <span class="flap flap--intro" data-text="TRAVEL-HUB">TRAVEL-HUB</span>
+    <span class="label intro-screen__sub">LUG <i>⇄</i> NYC</span>
   </div>
 </div>
 <div class="curtain" aria-hidden="true"><span class="curtain__sign"><i>${ICON.arrow}</i><b></b></span></div>

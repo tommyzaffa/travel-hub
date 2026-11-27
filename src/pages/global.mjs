@@ -1,5 +1,5 @@
 import { P } from '../data.mjs';
-import { img, imgUrl, btn, lines, ctaBand, pageHero } from '../lib.mjs';
+import { img, imgUrl, btn, ctaBand, pageHero } from '../lib.mjs';
 
 export default function global(ctx) {
   const { t, url } = ctx;
@@ -11,36 +11,16 @@ export default function global(ctx) {
     { img: P.stockholm, title: t('Sweden & Denmark', 'Svezia e Danimarca'), text: t('Stockholm, Copenhagen and the archipelagos, easy to combine in one trip.', 'Stoccolma, Copenaghen e gli arcipelaghi, facili da combinare in un solo viaggio.'), alt: t('Stockholm old town seen from the water', 'Gamla Stan, Stoccolma, vista dall’acqua'), r: 0.8 },
   ];
 
-  const services = [
-    [P.hotel, t('Accommodation', 'Alloggi'), t('Hotels, lodges and resorts chosen for groups: location, room allocation, meal plans.', 'Hotel, lodge e resort scelti per i gruppi: posizione, allotment di camere, trattamento.')],
-    [P.coach, t('Transfers & transport', 'Transfer e trasporti'), t('Airport transfers, coaches with driver, minivans, trains, ferries and domestic flights.', 'Transfer da e per l’aeroporto, pullman con autista, minivan, treni, traghetti e voli interni.')],
-    [P.cityGroup, t('Guides & tour leaders', 'Guide e accompagnatori'), t('Local guides for visits and tour leaders for the whole trip.', 'Guide locali per le visite e accompagnatori per tutto il viaggio.')],
-    [P.grandCanyon2, t('Experiences & tickets', 'Esperienze e ingressi'), t('Park entries, shows, tastings, helicopter flights, private visits.', 'Ingressi ai parchi, spettacoli, degustazioni, sorvoli in elicottero, visite private.')],
-    [P.gala, t('Incentives & events', 'Incentive ed eventi'), t('Incentive programmes, dinners and events for company groups.', 'Programmi incentive, cene ed eventi per gruppi aziendali.')],
-    [P.airport, t('Assistance', 'Assistenza'), t('One contact before departure and a direct line during the trip.', 'Un referente prima della partenza e una linea diretta durante il viaggio.')],
-  ];
-
   const body = `
 ${pageHero(ctx, {
-  gate: 'C',
-  kicker: t('Beyond North America', 'Oltre il Nord America'),
+  gate: 'D',
+  kicker: t('Worldwide', 'Nel mondo'),
   title: ['Global Reach'],
-  sub: t('The same method, other horizons: the Nordics and, on request, other destinations around the world.', 'Lo stesso metodo, altri orizzonti: i Paesi nordici e, su richiesta, altre destinazioni nel mondo.'),
+  sub: t('The same care, other horizons: the Nordics and, on request, the rest of the world.', 'La stessa cura, altri orizzonti: i Paesi nordici e, su richiesta, il resto del mondo.'),
   image: P.lofoten,
   alt: t('Red fishermen’s cabins below a granite peak in the Lofoten islands', 'Capanne rosse dei pescatori sotto un picco di granito alle Lofoten'),
-  jump: [['#nordics', t('The Nordics', 'Paesi nordici')], ['#on-request', t('On request', 'Su richiesta')], ['#services', t('Services', 'Servizi')]],
+  jump: [['#nordics', t('The Nordics', 'Paesi nordici')], ['#on-request', t('On request', 'Su richiesta')]],
 })}
-
-<section class="sec intro">
-  <div class="wrap intro__grid">
-    <p class="label" data-r>${t('Our method', 'Il nostro metodo')}</p>
-    <h2 class="d2" data-split>${t('A way of working that travels well', 'Un modo di lavorare che viaggia bene')}</h2>
-    <div class="intro__txt">
-      <p class="lead" data-r>${t('North America is our core. But the way we work applies anywhere: one contact, direct relationships with local suppliers, someone reachable during the trip.', 'Il Nord America è il nostro centro. Ma il nostro modo di lavorare vale ovunque: un solo referente, rapporti diretti con i fornitori locali, qualcuno raggiungibile durante il viaggio.')}</p>
-      <p class="mute" data-r>${t('We apply it to Northern Europe and, when it makes sense for your group, to other destinations.', 'Lo applichiamo al Nord Europa e, quando ha senso per il vostro gruppo, ad altre destinazioni.')}</p>
-    </div>
-  </div>
-</section>
 
 <section class="sec sec--grey nordics" id="nordics">
   <div class="wrap">
@@ -69,30 +49,9 @@ ${pageHero(ctx, {
     <p class="label" data-r>${t('On request', 'Su richiesta')}</p>
     <h2 class="d1" data-split>${t('Somewhere<br>else in mind?', 'Un’altra<br>meta in mente?')}</h2>
     <div class="request__txt" data-r>
-      <p class="lead">${t('If it isn’t on this page, it doesn’t mean we can’t do it. Tell us the destination: we’ll tell you honestly whether we’re the right partner for it.', 'Se non è in questa pagina, non vuol dire che non possiamo farlo. Diteci la destinazione: vi diremo con onestà se siamo il partner giusto.')}</p>
-      ${btn(url('contact'), t('Ask us', 'Chiedeteci'))}
+      <p class="lead">${t('Not on this page? Ask anyway.', 'Non è in questa pagina? Chiedetecela comunque.')}</p>
+      ${btn(url('contact'), t('Request a quote', 'Richiedi un preventivo'))}
     </div>
-  </div>
-</section>
-
-<section class="sec svcrows" id="services">
-  <div class="wrap">
-    <header class="sec-head">
-      <p class="label" data-r>${t('Services', 'Servizi')}</p>
-      <h2 class="d2" data-split>${t('What we handle, wherever you go', 'Cosa gestiamo, ovunque andiate')}</h2>
-    </header>
-    <ol class="rows">
-      ${services
-        .map(
-          ([im, title, text], i) => `
-      <li class="rows__item" data-peek="${imgUrl(im, 760)}" data-r>
-        <span class="label">0${i + 1}</span>
-        <h3 class="rows__t">${title}</h3>
-        <p class="mute">${text}</p>
-      </li>`
-        )
-        .join('')}
-    </ol>
   </div>
 </section>
 
@@ -102,8 +61,8 @@ ${ctaBand(ctx)}
   return {
     title: t('Global Reach — Nordics and beyond | Travel Hub', 'Global Reach — Paesi nordici e altre destinazioni | Travel Hub'),
     description: t(
-      'Group travel in Norway, Iceland, Finnish Lapland, Sweden and Denmark, and other destinations on request, with the same method we use in North America.',
-      'Viaggi di gruppo in Norvegia, Islanda, Lapponia finlandese, Svezia e Danimarca e in altre destinazioni su richiesta, con lo stesso metodo che usiamo in Nord America.'
+      'Group travel to Norway, Iceland, Finnish Lapland, Sweden and Denmark, and to other destinations on request.',
+      'Viaggi di gruppo in Norvegia, Islanda, Lapponia finlandese, Svezia e Danimarca e in altre destinazioni su richiesta.'
     ),
     ogImage: imgUrl(P.lofoten, 1200, 0.525),
     body,

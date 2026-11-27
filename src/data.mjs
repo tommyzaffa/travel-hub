@@ -12,24 +12,25 @@ export const COMPANY = {
   iata: '96001872',
   since: 2016,
   instagram: 'https://www.instagram.com/travel_hub_usa/',
+  slogan: 'Bespoke Travel Experiences',
   offices: [
-    {
-      key: 'mia',
-      code: 'MIA',
-      tz: 'America/New_York',
-      city: { en: 'Miami', it: 'Miami' },
-      role: { en: 'Head office', it: 'Sede principale' },
-      lines: ['1975 NE 24th Ct', 'Miami, FL 33180', 'USA'],
-      phone: '+1 786 654 4670',
-    },
     {
       key: 'lug',
       code: 'LUG',
       tz: 'Europe/Zurich',
       city: { en: 'Bioggio · Lugano', it: 'Bioggio · Lugano' },
-      role: { en: 'Branch office', it: 'Filiale' },
+      role: { en: 'Head office', it: 'Sede principale' },
       lines: ['Salita Cuccarello 4b', '6934 Bioggio', { en: 'Switzerland', it: 'Svizzera' }],
       phone: '+41 76 483 36 96',
+    },
+    {
+      key: 'nyc',
+      code: 'NYC',
+      tz: 'America/New_York',
+      city: { en: 'New York', it: 'New York' },
+      role: { en: 'US office', it: 'Ufficio USA' },
+      lines: ['Manhattan', 'New York, NY 10022', 'USA'],
+      phone: '+1 646 269 7133',
     },
     {
       key: 'ita',
@@ -38,8 +39,7 @@ export const COMPANY = {
       city: { en: 'Italy', it: 'Italia' },
       role: { en: 'Booking office', it: 'Ufficio booking' },
       lines: [],
-      phone: '+39 348 225 1483',
-      phone2: '+39 351 919 8606',
+      phone: '+39 328 211 34 97',
     },
   ],
 };
@@ -47,6 +47,7 @@ export const COMPANY = {
 // page key -> slug per language (relative to site root, trailing slash)
 export const PAGES = {
   home: { en: '', it: 'it/' },
+  services: { en: 'what-we-do/', it: 'it/cosa-facciamo/' },
   usa: { en: 'usa-canada/', it: 'it/usa-canada/' },
   global: { en: 'global-reach/', it: 'it/global-reach/' },
   contact: { en: 'contact/', it: 'it/contatti/' },
@@ -54,9 +55,10 @@ export const PAGES = {
 
 export const NAV = [
   { key: 'home', gate: 'A', label: { en: 'Home', it: 'Home' } },
-  { key: 'usa', gate: 'B', label: { en: 'USA & Canada', it: 'USA & Canada' } },
-  { key: 'global', gate: 'C', label: { en: 'Global Reach', it: 'Global Reach' } },
-  { key: 'contact', gate: 'D', label: { en: 'Contact', it: 'Contatti' } },
+  { key: 'services', gate: 'B', label: { en: 'What we do', it: 'Cosa facciamo' } },
+  { key: 'usa', gate: 'C', label: { en: 'USA & Canada', it: 'USA & Canada' } },
+  { key: 'global', gate: 'D', label: { en: 'Global Reach', it: 'Global Reach' } },
+  { key: 'contact', gate: 'E', label: { en: 'Contact', it: 'Contatti' } },
 ];
 
 // Unsplash photo ids (without the "photo-" prefix)
@@ -98,4 +100,28 @@ export const P = {
   van: '1469854523086-cc02fe5d8800',
   planeWindow: '1488085061387-422e29b40080',
   airliner: '1436491865332-7a61a109cc05',
+  // Route 66
+  route66Road: '1679560850446-3978e191d7be',
+  cadillacRanch: '1649561205931-c58c4ecd26ca',
+  santaMonica: '1505887579242-c7bc04062e98',
+  desertRoad: '1718046263737-553dfecb126e',
+  // Florida
+  keys: '1740990556698-000d1395e9cd',
+  lifeguard: '1593810659067-3abb9b4dfa4c',
+  manatee: '1561486462-89834a03cb72',
+  // Texas
+  austin: '1530089711124-9ca31fb9e863',
+  riverwalk: '1605649666555-e321522c3023',
+  texasSign: '1545345540-ea5d968030af',
+  alamo: '1585182733929-2f0bc3ae2698',
+  // Eastern Canada
+  toronto: '1507992781348-310259076fe0',
+  ottawa: '1599457480385-83984b998663',
+  oldMontreal: '1767290444122-5230a7fefef7',
+  notreDame: '1599457435394-63f83db8f0d6',
+  // Rockies, the South, meals
+  maroonBells: '1506391436719-ceef2f52be69',
+  frenchQuarter: '1568693059993-a239b9cd4957',
+  nashville: '1537889230356-e49d1df471b9',
+  diner: '1761245193924-53a5a4bed9ef',
 };

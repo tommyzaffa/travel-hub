@@ -1,67 +1,56 @@
 import { P, COMPANY } from '../data.mjs';
 import { img, imgUrl, btn, lines, ctaBand, ICON, clock, esc, placeholder } from '../lib.mjs';
-
-// "4/3" (w/h) -> 0.75 (h/w)
-const hw = (r) => {
-  const [a, b] = r.split('/').map(Number);
-  return b / a;
-};
+import { SERVICES } from './services.mjs';
 
 export default function home(ctx) {
   const { t, url } = ctx;
-  const [mia, lug] = COMPANY.offices;
+  const [lug, nyc] = COMPANY.offices;
+  const usa = url('usa');
 
   // hero flip-board: one destination at a time (word max 12 characters)
   const boarding = t('Boarding', 'Imbarco');
   const heroDest = [
-    { code: 'JFK', word: 'NEW YORK', name: 'New York', img: P.nyc, href: url('usa'), alt: t('Manhattan and the Brooklyn Bridge', 'Manhattan e il ponte di Brooklyn') },
-    { code: 'LAS', word: 'GRAND CANYON', name: t('Grand Canyon · Western parks', 'Grand Canyon · Parchi dell’Ovest'), img: P.grandCanyon, href: url('usa') + '#itin-west', alt: t('The Colorado River in the Grand Canyon', 'Il fiume Colorado nel Grand Canyon') },
-    { code: 'BOS', word: 'NEW ENGLAND', name: t('New England · Boston & Maine', 'New England · Boston e Maine'), img: P.lighthouse, href: url('usa') + '#itin-newengland', alt: t('Portland Head Light, Maine', 'Portland Head Light, Maine') },
-    { code: 'SFO', word: 'CALIFORNIA', name: t('California · Big Sur', 'California · Big Sur'), img: P.bigsur, href: url('usa') + '#more', alt: t('Bixby Bridge on the Big Sur coast', 'Il Bixby Bridge sulla costa di Big Sur') },
-    { code: 'YYC', word: 'BANFF', name: t('Banff · Canadian Rockies', 'Banff · Rocciose canadesi'), img: P.moraine, href: url('usa') + '#canada', alt: t('Moraine Lake in Banff National Park', 'Il Moraine Lake nel parco di Banff') },
-    { code: 'YQB', word: 'QUÉBEC', name: t('Québec City · Canada', 'Québec City · Canada'), img: P.quebec, href: url('usa') + '#canada', alt: t('Château Frontenac in Québec City', 'Lo Château Frontenac a Québec City') },
-    { code: 'ANC', word: 'ALASKA', name: t('Alaska · Glaciers', 'Alaska · Ghiacciai'), img: P.alaska, href: url('usa') + '#more', alt: t('A glacier in Alaska', 'Un ghiacciaio in Alaska') },
+    { code: 'JFK', word: 'NEW YORK', name: 'New York', img: P.nyc, href: usa + '#more', alt: t('Manhattan and the Brooklyn Bridge', 'Manhattan e il ponte di Brooklyn') },
+    { code: 'LAS', word: 'GRAND CANYON', name: t('Grand Canyon · Western parks', 'Grand Canyon · Parchi dell’Ovest'), img: P.grandCanyon, href: usa + '#itin-west', alt: t('The Colorado River in the Grand Canyon', 'Il fiume Colorado nel Grand Canyon') },
+    { code: 'ORD', word: 'ROUTE 66', name: 'Route 66 · Chicago → Los Angeles', img: P.route66Road, href: usa + '#itin-route66', alt: t('The Route 66 shield painted on the road', 'Il simbolo della Route 66 dipinto sull’asfalto') },
+    { code: 'MIA', word: 'FLORIDA', name: t('Florida · Keys & Everglades', 'Florida · Keys ed Everglades'), img: P.keys, href: usa + '#itin-florida', alt: t('The Overseas Highway across the Florida Keys', 'La Overseas Highway sulle isole Keys') },
+    { code: 'DFW', word: 'TEXAS', name: 'Texas · Lone Star Trail', img: P.riverwalk, href: usa + '#itin-texas', alt: t('Boats on the San Antonio River Walk', 'Barche sul River Walk di San Antonio') },
+    { code: 'MSY', word: 'NEW ORLEANS', name: t('New Orleans · Southern states', 'New Orleans · Stati del Sud'), img: P.frenchQuarter, href: usa + '#more', alt: t('Iron balconies in the French Quarter, New Orleans', 'Balconi in ferro battuto nel French Quarter, New Orleans') },
+    { code: 'YUL', word: 'MONTRÉAL', name: t('Montréal · Eastern Canada', 'Montréal · Canada dell’Est'), img: P.notreDame, href: usa + '#canada', alt: t('Inside Notre-Dame Basilica, Montréal', 'L’interno della basilica di Notre-Dame, Montréal') },
     { code: 'OSL', word: t('NORWAY', 'NORVEGIA'), name: t('Norway · Nordics', 'Norvegia · Paesi nordici'), img: P.norway, href: url('global'), alt: t('A red house on a Norwegian fjord', 'Una casa rossa su un fiordo norvegese'), req: true },
   ].map((d) => ({ ...d, status: d.req ? t('On request', 'Su richiesta') : boarding, label: d.req ? 'Global Reach' : 'USA & Canada' }));
 
-  const departures = [
-    { code: 'JFK', dest: t('NEW YORK', 'NEW YORK'), fmt: t('Cities & culture', 'Città e cultura'), img: P.nyc, href: url('usa'), on: true },
-    { code: 'LAS', dest: t('WESTERN PARKS', 'PARCHI DELL’OVEST'), fmt: t('Small group tour', 'Small group tour'), img: P.zion, href: url('usa') + '#itineraries', on: true },
-    { code: 'BOS', dest: t('NEW ENGLAND', 'NEW ENGLAND'), fmt: t('Coast & foliage', 'Costa e foliage'), img: P.lighthouse, href: url('usa') + '#itineraries', on: true },
-    { code: 'SFO', dest: t('CALIFORNIA', 'CALIFORNIA'), fmt: t('Coast & cities', 'Costa e città'), img: P.bigsur, href: url('usa') + '#more', on: true },
-    { code: 'ANC', dest: t('ALASKA', 'ALASKA'), fmt: t('Wild nature', 'Natura selvaggia'), img: P.alaska, href: url('usa') + '#more', on: true },
-    { code: 'YYC', dest: t('CANADIAN ROCKIES', 'ROCCIOSE CANADESI'), fmt: t('Lakes & mountains', 'Laghi e montagne'), img: P.moraine, href: url('usa') + '#canada', on: true },
-    { code: 'YQB', dest: t('QUÉBEC & ONTARIO', 'QUÉBEC E ONTARIO'), fmt: t('Cities & culture', 'Città e cultura'), img: P.quebec, href: url('usa') + '#canada', on: true },
-    { code: 'OSL', dest: t('NORDICS', 'PAESI NORDICI'), fmt: t('Fjords & aurora', 'Fiordi e aurore'), img: P.norway, href: url('global'), on: false },
-  ];
-
-  const services = [
-    { n: '01', img: P.groupWalk, r: '4/3', title: t('Small group tours', 'Small group tour'), text: t('Ready-to-sell itineraries for small groups, with a tour leader and every service included.', 'Itinerari pronti da vendere per piccoli gruppi, con accompagnatore e tutti i servizi inclusi.'), alt: t('A small group of travellers walking on a mountain trail', 'Un piccolo gruppo di viaggiatori su un sentiero di montagna') },
-    { n: '02', img: P.hotel, r: '4/5', title: t('Accommodation', 'Alloggi'), text: t('Hotels selected and contracted directly, from city properties to lodges inside the national parks.', 'Hotel selezionati e contrattati direttamente, dagli alberghi in città ai lodge dentro i parchi nazionali.'), alt: t('Hotel lobby with designer furniture', 'Hall di un hotel con arredi di design') },
-    { n: '03', img: P.coach, r: '1/1', title: t('Transfers & transport', 'Transfer e trasporti'), text: t('Coaches, minivans, private transfers and domestic connections, timed around your programme.', 'Pullman, minivan, transfer privati e collegamenti interni, organizzati attorno al vostro programma.'), alt: t('A coach driving on a winding road', 'Un pullman su una strada tra le colline') },
-    { n: '04', img: P.cityGroup, r: '1/1', title: t('Guides & tour leaders', 'Guide e accompagnatori'), text: t('Local guides and tour leaders who know the route, the timing and the people.', 'Guide locali e accompagnatori che conoscono il percorso, i tempi e le persone.'), alt: t('A group visiting a city on foot', 'Un gruppo in visita a piedi in città') },
-    { n: '05', img: P.airport, r: '1/1', title: t('On-site assistance', 'Assistenza sul posto'), text: t('A contact in the same time zone as your group, before departure and throughout the trip.', 'Un referente nello stesso fuso orario del gruppo, prima della partenza e per tutto il viaggio.'), alt: t('Travellers with luggage in an airport terminal', 'Viaggiatori con bagagli in un terminal') },
-    { n: '06', img: P.gala, r: '3/2', title: t('Incentives & business travel', 'Incentive e viaggi aziendali'), text: t('Incentive trips, events and business travel, with the same attention to detail.', 'Viaggi incentive, eventi e trasferte aziendali, con la stessa cura per i dettagli.'), alt: t('A long table set for a gala dinner', 'Un lungo tavolo apparecchiato per una cena di gala') },
-    { n: '07', img: P.van, r: '3/2', title: t('Self-drive & private tours', 'Self-drive e tour privati'), text: t('Self-drive itineraries and private tours for individual clients and smaller parties.', 'Itinerari self-drive e tour privati per clienti individuali e piccoli nuclei.'), alt: t('A yellow van on a road among red rocks', 'Un van giallo su una strada tra le rocce rosse') },
+  const destinations = [
+    { code: 'JFK', dest: 'NEW YORK', theme: t('Cities & culture', 'Città e cultura'), img: P.nyc, href: usa + '#more' },
+    { code: 'LAS', dest: t('WESTERN PARKS', 'PARCHI DELL’OVEST'), theme: t('Canyons & deserts', 'Canyon e deserti'), img: P.zion, href: usa + '#itin-west' },
+    { code: 'SFO', dest: 'CALIFORNIA', theme: t('Coast & cities', 'Costa e città'), img: P.bigsur, href: usa + '#more' },
+    { code: 'DEN', dest: t('ROCKY MOUNTAINS', 'MONTAGNE ROCCIOSE'), theme: t('Peaks & parks', 'Vette e parchi'), img: P.maroonBells, href: usa + '#more' },
+    { code: 'DFW', dest: 'TEXAS', theme: t('Ranches & cities', 'Ranch e città'), img: P.austin, href: usa + '#itin-texas' },
+    { code: 'MSY', dest: t('SOUTHERN STATES', 'STATI DEL SUD'), theme: t('Music & history', 'Musica e storia'), img: P.frenchQuarter, href: usa + '#more' },
+    { code: 'MIA', dest: 'FLORIDA', theme: t('Sea & wildlife', 'Mare e natura'), img: P.keys, href: usa + '#itin-florida' },
+    { code: 'YYZ', dest: t('ONTARIO & QUÉBEC', 'ONTARIO E QUÉBEC'), theme: t('Cities & history', 'Città e storia'), img: P.toronto, href: usa + '#canada' },
+    { code: 'OSL', dest: t('NORDICS', 'PAESI NORDICI'), theme: t('Fjords & aurora', 'Fiordi e aurore'), img: P.norway, href: url('global'), req: true },
   ];
 
   const steps = [
-    [t('Brief', 'Richiesta'), t('You tell us who’s travelling, when, for how long and with what budget.', 'Ci dite chi viaggia, quando, per quanto tempo e con quale budget.')],
-    [t('Proposal', 'Proposta'), t('We send a detailed itinerary with costs, hotels and options, and refine it with you until it’s right.', 'Vi mandiamo un itinerario dettagliato con costi, hotel e opzioni, e lo rifiniamo insieme finché non è quello giusto.')],
-    [t('Operations', 'Operativo'), t('We book and confirm every service and prepare the digital travel kit for you and your travellers.', 'Prenotiamo e confermiamo ogni servizio e prepariamo il travel kit digitale per voi e per i viaggiatori.')],
-    [t('On the ground', 'Sul posto'), t('During the trip we stay reachable and solve problems before they become yours.', 'Durante il viaggio restiamo raggiungibili e risolviamo i problemi prima che diventino vostri.')],
+    [t('Request', 'Richiesta'), t('Who’s travelling, when, and with what budget.', 'Chi viaggia, quando e con quale budget.')],
+    [t('Quote', 'Preventivo'), t('A detailed itinerary with costs and options, refined together.', 'Un itinerario dettagliato, con costi e opzioni, da rifinire insieme.')],
+    [t('Operations', 'Operativo'), t('Every service booked and confirmed. A digital travel kit for every traveller.', 'Ogni servizio prenotato e confermato. Un travel kit digitale per ogni viaggiatore.')],
+    [t('Travel assistance', 'Assistenza in viaggio'), t('Reachable for the whole trip, ready when plans change.', 'Raggiungibili per tutto il viaggio, pronti se qualcosa cambia.')],
   ];
+
+  const svc = SERVICES(ctx);
 
   const body = `
 <section class="hx" data-hero data-theme="night">
   <div class="wrap hx__wrap">
     <div class="hx__top label" data-hero-rest>
-      <span><span class="tag">B2B</span>${t('Group travel for the travel trade · Since 2016', 'Viaggi di gruppo per il trade turistico · Dal 2016')}</span>
-      <span class="hx__clocks">${clock(ctx, mia)}${clock(ctx, lug)}</span>
+      <span><span class="tag">B2B</span>${COMPANY.slogan} · ${t('Since', 'Dal')} ${COMPANY.since}</span>
+      <span class="hx__clocks">${clock(ctx, lug)}${clock(ctx, nyc)}</span>
     </div>
     <div class="hx__grid">
       <div class="hx__head">
-        <h1 class="hx__title">${lines(t(['Group', 'travel'], ['Viaggi', 'di gruppo']))}<span class="sr-only"> ${t('to the USA, Canada and beyond', 'verso USA, Canada e oltre')}</span></h1>
+        <h1 class="hx__title">${lines(t(['Group', 'travel'], ['Viaggi', 'di gruppo']))}<span class="sr-only"> ${t('— bespoke journeys for the travel trade', '— viaggi su misura per il trade turistico')}</span></h1>
         <div class="hx__dest" aria-hidden="true">
           <span class="hx__arr">${ICON.arrow}</span>
           <span class="flap flap--hero" data-hero-flap>${esc(heroDest[0].word)}</span>
@@ -79,15 +68,15 @@ export default function home(ctx) {
         </a>
       </div>
       <div class="hx__body" data-hero-rest>
-        <p class="hx__sub">${t('We are the ground team behind agencies and tour operators who send groups to the USA and Canada: itineraries, hotels, transport, guides, and someone on site when it matters.', 'Siamo il team operativo dietro alle agenzie e ai tour operator che portano gruppi negli Stati Uniti e in Canada: itinerari, hotel, trasporti, guide e qualcuno sul posto quando serve.')}</p>
+        <p class="hx__sub">${t('Bespoke journeys for agencies and tour operators. Designed, booked and looked after from a single hub.', 'Viaggi su misura per agenzie e tour operator. Progettati, prenotati e seguiti da un unico hub.')}</p>
         <div class="hx__cta">
-          ${btn(url('contact'), t('Request a proposal', 'Richiedi una proposta'))}
-          ${btn(url('usa'), t('USA & Canada', 'USA & Canada'), 'ghost')}
+          ${btn(url('contact'), t('Request a quote', 'Richiedi un preventivo'))}
+          ${btn(url('services'), t('What we do', 'Cosa facciamo'), 'ghost')}
         </div>
       </div>
     </div>
     <div class="hx__gates" data-hero-rest>
-      <span class="label">${t('Next departures', 'Prossime partenze')}</span>
+      <span class="label">${t('Destinations', 'Destinazioni')}</span>
       <ol>
         ${heroDest.map((d, i) => `<li><button type="button" data-go="${i}" aria-label="${esc(d.name)}"${i === 0 ? ' class="is-on" aria-pressed="true"' : ' aria-pressed="false"'}>${d.code}</button></li>`).join('')}
       </ol>
@@ -104,47 +93,48 @@ export default function home(ctx) {
     <p class="label statement__label" data-r>${t('Professional to professional', 'Da professionisti a professionisti')}</p>
     <p class="statement__big" data-words>
       ${t(
-        `We don’t sell trips to travellers. We build and run them <span class="inl">${img(P.viewpoint, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> for the agencies, tour operators <span class="inl">${img(P.coach, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> and companies who do.`,
-        `Non vendiamo viaggi al pubblico. Li costruiamo e li gestiamo <span class="inl">${img(P.viewpoint, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> per le agenzie, i tour operator <span class="inl">${img(P.coach, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> e le aziende che lo fanno.`
+        `We know the roads <span class="inl">${img(P.desertRoad, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> by heart, and the people <span class="inl">${img(P.cityGroup, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> along them by name.`,
+        `Conosciamo le strade <span class="inl">${img(P.desertRoad, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> a memoria e le persone <span class="inl">${img(P.cityGroup, { w: 480, ratio: 0.5, sizes: '160px', alt: '' })}</span> lungo il percorso per nome.`
       )}
     </p>
-    <div class="statement__cols">
-      <p class="lead" data-r>${t('Travel Hub was born from a simple idea: buy directly from local suppliers, and add the judgement of people who travel these regions every year.', 'Travel Hub nasce da un’idea semplice: acquistare direttamente dai fornitori locali e aggiungere l’esperienza di chi queste regioni le percorre ogni anno.')}</p>
-      <p data-r>${t('The result is fewer intermediaries, better rates and a single contact who knows every detail of your group’s trip, from the first quote to the last transfer.', 'Il risultato: meno intermediari, tariffe migliori e un unico referente che conosce ogni dettaglio del viaggio del vostro gruppo, dal primo preventivo all’ultimo transfer.')}</p>
-    </div>
+    <ul class="pillars">
+      <li data-r>${t('Direct from local suppliers.', 'Direttamente dai fornitori locali.')}</li>
+      <li data-r>${t('Fewer intermediaries, better rates.', 'Meno intermediari, tariffe migliori.')}</li>
+      <li data-r>${t('One hub, from the first quote to the last transfer.', 'Un solo hub, dal primo preventivo all’ultimo transfer.')}</li>
+    </ul>
     <dl class="facts">
-      <div data-r><dt class="d3">2016</dt><dd>${t('Working with the travel trade since', 'Al lavoro con il trade turistico dal')} 2016</dd></div>
-      <div data-r><dt class="d3">MIA · LUG</dt><dd>${t('Offices in Miami and in Bioggio, Lugano', 'Sedi a Miami e a Bioggio, Lugano')}</dd></div>
-      <div data-r><dt class="d3">100% B2B</dt><dd>${t('We only work with professionals', 'Lavoriamo solo con professionisti')}</dd></div>
+      <div data-r><dt class="d3">${COMPANY.since}</dt><dd>${t('Founded', 'Anno di fondazione')}</dd></div>
+      <div data-r><dt class="d3">LUG · NYC</dt><dd>${t('Offices in Lugano and New York', 'Sedi a Lugano e New York')}</dd></div>
+      <div data-r><dt class="d3">100% B2B</dt><dd>${t('Only for professionals', 'Solo per professionisti')}</dd></div>
       <div data-r><dt class="d3">IATA</dt><dd>${t('Accredited agency', 'Agenzia accreditata')} · ${COMPANY.iata}</dd></div>
     </dl>
   </div>
 </section>
 
-<section class="sec board" id="departures" data-theme="night">
+<section class="sec board" id="destinations" data-theme="night">
   <div class="wrap">
     <header class="board__head">
       <div>
         <p class="label board__kicker"><i class="board__ic">${ICON.plane}</i>${t('Where we take groups', 'Dove portiamo i gruppi')}</p>
-        <h2 class="d2" data-split>${t('Departures', 'Partenze')}</h2>
+        <h2 class="d2" data-split>${t('Destinations', 'Destinazioni')}</h2>
       </div>
-      <p class="board__note" data-r>${t('North America first, the rest on request. Every departure, any date: you tell us when.', 'Prima di tutto il Nord America, il resto su richiesta. Ogni partenza, in qualsiasi data: ci dite voi quando.')}</p>
+      <p class="board__note" data-r>${t('Any date, any group size.', 'Qualsiasi data, qualsiasi gruppo.')}</p>
     </header>
     <div class="board__table" role="table" aria-label="${t('Destinations', 'Destinazioni')}">
       <div class="board__row board__row--head" role="row">
         <span role="columnheader">${t('Code', 'Codice')}</span>
         <span role="columnheader">${t('Destination', 'Destinazione')}</span>
-        <span role="columnheader" class="board__fmt">${t('Format', 'Formula')}</span>
+        <span role="columnheader" class="board__fmt">${t('Theme', 'Tema')}</span>
         <span role="columnheader" class="board__st">${t('Status', 'Stato')}</span>
       </div>
-      ${departures
+      ${destinations
         .map(
           (d) => `
-      <a class="board__row" role="row" href="${d.href}" data-peek="${imgUrl(d.img, 760)}" data-label="${d.on ? 'USA & Canada' : 'Global Reach'}">
+      <a class="board__row" role="row" href="${d.href}" data-peek="${imgUrl(d.img, 760)}" data-label="${d.req ? 'Global Reach' : 'USA & Canada'}">
         <span role="cell"><span class="flap" data-text="${d.code}">${d.code}</span></span>
         <span role="cell"><span class="flap" data-text="${esc(d.dest)}">${esc(d.dest)}</span></span>
-        <span role="cell" class="board__fmt">${d.fmt}</span>
-        <span role="cell" class="board__st"><span class="status${d.on ? '' : ' status--req'}">${d.on ? t('Boarding', 'Imbarco') : t('On request', 'Su richiesta')}</span></span>
+        <span role="cell" class="board__fmt">${d.theme}</span>
+        <span role="cell" class="board__st"><span class="status${d.req ? ' status--req' : ''}">${d.req ? t('On request', 'Su richiesta') : boarding}</span></span>
       </a>`
         )
         .join('')}
@@ -152,26 +142,21 @@ export default function home(ctx) {
   </div>
 </section>
 
-<section class="sec services">
-  <div class="wrap">
-    <header class="sec-head">
-      <p class="label" data-r>${t('What we handle', 'Cosa gestiamo')}</p>
-      <h2 class="d2" data-split>${t('Everything a group needs, from one desk', 'Tutto ciò che serve a un gruppo, da un’unica scrivania')}</h2>
-    </header>
-    <div class="svc">
-      ${services
+<section class="sec svx">
+  <div class="wrap svx__grid">
+    <div class="svx__head">
+      <p class="label" data-r>${t('Gate B · What we do', 'Gate B · Cosa facciamo')}</p>
+      <h2 class="d2" data-split>${t('One Stop Shop for all your group needs', 'Un solo indirizzo per ogni esigenza del gruppo')}</h2>
+      <div data-r>${btn(url('services'), t('See what we do', 'Scopri cosa facciamo'), 'ink')}</div>
+    </div>
+    <ol class="svx__list">
+      ${svc
         .map(
-          (s) => `
-      <article class="svc__item" data-r>
-        <figure class="svc__fig" style="--r:${s.r}" data-clip>${img(s.img, { w: 1400, ratio: hw(s.r), sizes: '(max-width: 760px) 100vw, 45vw', alt: s.alt })}</figure>
-        <div class="svc__meta">
-          <span class="label">${s.n}</span>
-          <div><h3 class="h4">${s.title}</h3><p class="mute">${s.text}</p></div>
-        </div>
-      </article>`
+          (s, i) => `
+      <li data-r><a href="${url('services')}#svc-${i + 1}" data-peek="${imgUrl(s.img, 760)}" data-label="${t('What we do', 'Cosa facciamo')}"><span class="label">${String(i + 1).padStart(2, '0')}</span><span class="svx__t">${s.title}</span>${ICON.arrowUR}</a></li>`
         )
         .join('')}
-    </div>
+    </ol>
   </div>
 </section>
 
@@ -179,8 +164,8 @@ export default function home(ctx) {
   <div class="wrap process__grid">
     <div class="process__head">
       <p class="label" data-r>${t('How we work', 'Come lavoriamo')}</p>
-      <h2 class="d2" data-split>${t('Four steps, one contact', 'Quattro passaggi, un solo referente')}</h2>
-      <p class="mute" data-r>${t('The same person follows your file from the brief to the return flight.', 'La stessa persona segue la vostra pratica dalla richiesta al volo di rientro.')}</p>
+      <h2 class="d2" data-split>${t('Four steps, one hub', 'Quattro passaggi, un unico riferimento')}</h2>
+      <p class="mute" data-r>${t('Your point of reference is Travel Hub, from the first request to the flight home.', 'Il vostro punto di riferimento è Travel Hub, dalla richiesta al volo di rientro.')}</p>
     </div>
     <ol class="process__list">
       ${steps
@@ -202,12 +187,12 @@ export default function home(ctx) {
   </div>
   <div class="wrap feature__body">
     <div>
-      <p class="label">${t('Gate B · North America', 'Gate B · Nord America')}</p>
+      <p class="label">Gate C · ${t('Itineraries', 'Itinerari')}</p>
       <h2 class="d1" data-split>USA<br>&amp; Canada</h2>
     </div>
     <div class="feature__txt" data-r>
-      <p class="lead">${t('Head office in Miami, direct relationships with local suppliers and a team that knows these routes first-hand. North America is where we know the details.', 'Sede principale a Miami, rapporti diretti con i fornitori locali e un team che questi itinerari li conosce di persona. Il Nord America è dove conosciamo i dettagli.')}</p>
-      ${btn(url('usa'), t('Discover USA & Canada', 'Scopri USA & Canada'))}
+      <p class="lead">${t('Direct relationships with local suppliers, and roads we know first-hand. Five itineraries to start from.', 'Rapporti diretti con i fornitori locali e strade conosciute di persona. Cinque itinerari da cui partire.')}</p>
+      ${btn(usa, t('Discover USA & Canada', 'Scopri USA & Canada'))}
     </div>
   </div>
 </section>
@@ -215,9 +200,9 @@ export default function home(ctx) {
 <section class="sec reach">
   <div class="wrap reach__grid">
     <div class="reach__txt">
-      <p class="label" data-r>${t('Gate C · Beyond North America', 'Gate C · Oltre il Nord America')}</p>
+      <p class="label" data-r>Gate D · Global Reach</p>
       <h2 class="d2" data-split>${t('Other horizons', 'Altri orizzonti')}</h2>
-      <p class="lead" data-r>${t('Fjords, northern lights and Scandinavian capitals: we take groups to the Nordics too, and to other destinations on request.', 'Fiordi, aurore boreali e capitali scandinave: organizziamo gruppi anche nei Paesi nordici e, su richiesta, in altre destinazioni.')}</p>
+      <p class="lead" data-r>${t('Fjords, northern lights, Nordic capitals. And, on request, the rest of the world.', 'Fiordi, aurore boreali, capitali del Nord. E, su richiesta, il resto del mondo.')}</p>
       <div data-r>${btn(url('global'), 'Global Reach', 'ink')}</div>
     </div>
     <div class="reach__imgs">
@@ -231,10 +216,10 @@ ${ctaBand(ctx)}
 `;
 
   return {
-    title: t('Travel Hub — Group travel in the USA & Canada for the travel trade', 'Travel Hub — Viaggi di gruppo in USA e Canada per agenzie e tour operator'),
+    title: t('Travel Hub — Bespoke group travel for the travel trade', 'Travel Hub — Viaggi di gruppo su misura per agenzie e tour operator'),
     description: t(
-      'B2B partner for agencies and tour operators: small group tours, on-site assistance and ground services in the USA, Canada and the Nordics. Offices in Miami and Lugano.',
-      'Partner B2B per agenzie e tour operator: small group tour, assistenza sul posto e servizi a terra in USA, Canada e Paesi nordici. Sedi a Miami e Lugano.'
+      'Bespoke Travel Experiences: group travel for agencies and tour operators in the USA, Canada, the Nordics and beyond. Offices in Lugano and New York.',
+      'Bespoke Travel Experiences: viaggi di gruppo per agenzie e tour operator in USA, Canada, Paesi nordici e oltre. Sedi a Lugano e New York.'
     ),
     ogImage: imgUrl(P.monumentRoad, 1200, 0.525),
     body,

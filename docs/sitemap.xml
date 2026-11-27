@@ -11,6 +11,16 @@
     <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/"/>
   </url>
   <url>
+    <loc>https://www.travel-hub.biz/what-we-do/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/what-we-do/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/cosa-facciamo/"/>
+  </url>
+  <url>
+    <loc>https://www.travel-hub.biz/it/cosa-facciamo/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/what-we-do/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/cosa-facciamo/"/>
+  </url>
+  <url>
     <loc>https://www.travel-hub.biz/usa-canada/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.travel-hub.biz/usa-canada/"/>
     <xhtml:link rel="alternate" hreflang="it" href="https://www.travel-hub.biz/it/usa-canada/"/>

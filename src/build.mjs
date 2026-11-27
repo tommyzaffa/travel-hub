@@ -4,14 +4,16 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PAGES, SITE_URL, COMPANY, DEMO } from './data.mjs';
 import { makeCtx, layout } from './lib.mjs';
+import { logoFile } from './logo.mjs';
 import home from './pages/home.mjs';
+import services from './pages/services.mjs';
 import usa from './pages/usa.mjs';
 import global from './pages/global.mjs';
 import contact from './pages/contact.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'docs');
-const RENDER = { home, usa, global, contact };
+const RENDER = { home, services, usa, global, contact };
 
 if (existsSync(OUT)) rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
@@ -30,6 +32,7 @@ for (const lang of ['en', 'it']) {
 
 // static assets
 cpSync(join(ROOT, 'assets'), join(OUT, 'assets'), { recursive: true });
+writeFileSync(join(OUT, 'assets/img/travel-hub-logo.svg'), logoFile());
 
 // 404 (GitHub Pages) — bilingual, relative links resolved from the site root
 writeFileSync(
@@ -59,23 +62,24 @@ writeFileSync(
 writeFileSync(join(OUT, 'robots.txt'), DEMO ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 
 // llms.txt — plain summary for AI assistants
-const [mia, lug, ita] = COMPANY.offices;
+const [lug, nyc, ita] = COMPANY.offices;
 writeFileSync(
   join(OUT, 'llms.txt'),
   `# Travel Hub (${COMPANY.legal})
 
-> B2B group travel company. Travel Hub designs and operates group trips for travel agencies, tour operators, associations and companies. Focus: USA and Canada; also the Nordics (Norway, Iceland, Finnish Lapland, Sweden, Denmark) and other destinations on request. It does not sell to the general public.
+> ${COMPANY.slogan}. B2B group travel company: Travel Hub designs and operates group trips for travel agencies, tour operators, associations and companies, in the USA and Canada, the Nordics (Norway, Iceland, Finnish Lapland, Sweden, Denmark) and other destinations on request.
 
-- Services: small group tours with tour leader, accommodation, transfers and transport, local guides and tour leaders, on-site assistance, incentives and business travel, self-drive and private tours.
-- Offices: ${mia.lines.join(', ')} (head office, ${mia.phone}); ${lug.lines.map((l) => (typeof l === 'object' ? l.en : l)).join(', ')} (branch office, ${lug.phone}); Italy booking office (${ita.phone}).
+- Services: small group tours, accommodation, transfers and transport, guides and tour leaders, travel assistance, activities and attractions, meals, incentives and business travel, self-drive and private tours.
+- Offices: head office in ${lug.lines.map((l) => (typeof l === 'object' ? l.en : l)).join(', ')} (${lug.phone}); US office in Manhattan, New York, NY 10022 (${nyc.phone}); Italy (${ita.phone}).
 - Contact: ${COMPANY.email}
 - Since: ${COMPANY.since}. IATA ${COMPANY.iata}. Languages: English, Italian.
 
 ## Pages
-- [Home](${SITE_URL}/): who we are, services, destinations
-- [USA & Canada](${SITE_URL}/usa-canada/): small group tours, on-site assistance, sample itineraries (Great Parks of the West, 10 days; New England, 13 days), Canada
-- [Global Reach](${SITE_URL}/global-reach/): the Nordics and destinations on request, services
-- [Contact](${SITE_URL}/contact/): request form and offices
+- [Home](${SITE_URL}/): who we are, destinations, how we work
+- [What we do](${SITE_URL}/what-we-do/): one stop shop for all your group needs, nine services
+- [USA & Canada](${SITE_URL}/usa-canada/): sample itineraries (Great Parks of the West, 10 days; Historic Route 66, 16 days; Florida, 12 days; Texas: The Lone Star Trail, 14 days; Eastern Canada: Toronto, Ottawa, Montréal, 8 days) and more ideas
+- [Global Reach](${SITE_URL}/global-reach/): the Nordics and destinations on request
+- [Contact](${SITE_URL}/contact/): quote request form and offices
 - Italian version: ${SITE_URL}/it/
 `
 );
